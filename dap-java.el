@@ -232,6 +232,10 @@ initiate `compile' and attach to the process."
   "Populate all of the fields that are not present in CONF."
   (setq conf (plist-put conf :type "java"))
 
+  (plist-put conf :local-to-remote-path-fn (lambda (file-name)
+                                             (if (eq system-type 'windows-nt)
+                                                 (s-replace "/" "\\" file-name)
+                                               file-name)))
   (setq conf (pcase (plist-get conf :request)
                ("launch" (dap-java--populate-launch-args conf))
                ("attach" (dap-java--populate-attach-args conf))
